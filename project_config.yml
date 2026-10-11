@@ -1,0 +1,44 @@
+# Project configuration for the LLMOps course, filled in for you at onboarding.
+# Resources are provisioned at onboarding except the volume, which you create during the course.
+
+# Your usage policy: set it on every serverless job, endpoint and app you create.
+usage_policy_id: "72aa520c-cf9e-3c97-93dd-3a3a98a4c579"
+
+# Lakebase projects may be shared across environments; Unity Catalog
+# schemas remain separate. Your cohort provisions the Lakebase values below.
+
+# Development: your own schema in the dev catalog, which you manage and work in.
+dev:
+  catalog: "llmops_dev"
+  schema: "willis_nana"
+  volume: "arxiv_files"
+  llm_endpoint: "course_ops.gateway.chat"
+  embedding_endpoint: "course_ops.gateway.embed"
+  warehouse_id: "1c906a09ff40c838"
+  experiment_path: "/llmops/willis_nana-dev"
+  # Your provisioned Lakebase project.
+  lakebase_instance: "lb-llmops-willis-nana"
+
+# Acceptance: your schema in the acceptance catalog, written by your deploys; you read it.
+acc:
+  catalog: "llmops_acc"
+  schema: "willis_nana"
+  volume: "arxiv_files"
+  llm_endpoint: "course_ops.gateway.chat"
+  embedding_endpoint: "course_ops.gateway.embed"
+  warehouse_id: "1c906a09ff40c838"
+  experiment_path: "/llmops/willis_nana-acc"
+  # Your provisioned Lakebase project for this environment.
+  lakebase_instance: "lb-llmops-willis-nana"
+
+# Production: your schema in the production catalog, written by your deploys; you read it.
+prd:
+  catalog: "llmops_prd"
+  schema: "willis_nana"
+  volume: "arxiv_files"
+  llm_endpoint: "course_ops.gateway.chat"
+  embedding_endpoint: "course_ops.gateway.embed"
+  warehouse_id: "1c906a09ff40c838"
+  experiment_path: "/llmops/willis_nana-prd"
+  # Your provisioned Lakebase project for this environment.
+  lakebase_instance: "lb-llmops-willis-nana"

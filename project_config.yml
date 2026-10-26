@@ -1,44 +1,53 @@
-# Project configuration for the LLMOps course, filled in for you at onboarding.
-# Resources are provisioned at onboarding except the volume, which you create during the course.
+# Project Configuration for LLMOps Course
+usage_policy_id: "29a355d8-7fa4-3f65-b328-9f900842672e"
 
-# Your usage policy: set it on every serverless job, endpoint and app you create.
-usage_policy_id: "72aa520c-cf9e-3c97-93dd-3a3a98a4c579"
-
-# Lakebase projects may be shared across environments; Unity Catalog
-# schemas remain separate. Your cohort provisions the Lakebase values below.
-
-# Development: your own schema in the dev catalog, which you manage and work in.
+# Development environment
 dev:
-  catalog: "llmops_dev"
-  schema: "willis_nana"
-  volume: "arxiv_files"
-  llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "course_ops.gateway.embed"
-  warehouse_id: "1c906a09ff40c838"
-  experiment_path: "/llmops/willis_nana-dev"
-  # Your provisioned Lakebase project.
-  lakebase_instance: "lb-llmops-willis-nana"
+  catalog: llmops_dev
+  schema: willis_nana
+  volume: sales_calls # should be tested
+  llm_endpoint: course_ops.gateway.chat
+  embedding_endpoint: course_ops.gateway.embed
+  warehouse_id: 1c906a09ff40c838
+  experiment_path: /Shared/arxiv-curator-course
+  lakebase_instance: lb-llmops-dev
 
-# Acceptance: your schema in the acceptance catalog, written by your deploys; you read it.
+# Acceptance/Staging environment
 acc:
-  catalog: "llmops_acc"
-  schema: "willis_nana"
-  volume: "arxiv_files"
-  llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "course_ops.gateway.embed"
-  warehouse_id: "1c906a09ff40c838"
-  experiment_path: "/llmops/willis_nana-acc"
-  # Your provisioned Lakebase project for this environment.
-  lakebase_instance: "lb-llmops-willis-nana"
+  catalog: llmops_acc
+  schema: willis_nana
+  volume: sales_calls # to be tested
+  llm_endpoint: course_ops.gateway.chat
+  embedding_endpoint: course_ops.gateway.embed
+  warehouse_id: fed166457cfccb89
+  experiment_path: /Shared/arxiv-curator-course
+  lakebase_instance: lb-llmops-acc
 
-# Production: your schema in the production catalog, written by your deploys; you read it.
+# Production environment
 prd:
-  catalog: "llmops_prd"
-  schema: "willis_nana"
-  volume: "arxiv_files"
-  llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "course_ops.gateway.embed"
-  warehouse_id: "1c906a09ff40c838"
-  experiment_path: "/llmops/willis_nana-prd"
-  # Your provisioned Lakebase project for this environment.
-  lakebase_instance: "lb-llmops-willis-nana"
+  catalog: llmops_prd
+  schema: willis_nana
+  volume: sales_calls # to be tested
+  llm_endpoint: course_ops.gateway.chat
+  embedding_endpoint: course_ops.gateway.embed
+  warehouse_id: fed166457cfccb89
+  experiment_path: /Shared/arxiv-curator-course
+  lakebase_instance: lb-llmops-prd
+
+# Model configuration
+model_config:
+  temperature: 0.7
+  max_tokens: 2000
+  top_p: 0.95
+
+# Vector search configuration
+vector_search:
+  embedding_dimension: 1024
+  similarity_metric: cosine
+  num_results: 5
+
+# Chunking configuration
+chunking:
+  chunk_size: 512
+  chunk_overlap: 50
+  separator: "\n\n"

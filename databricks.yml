@@ -2,6 +2,7 @@
 # See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
 
 bundle:
+  engine: direct
   name: llmops-willis-nana
 
 # The course package is built as a wheel and installed in every job environment.
@@ -13,6 +14,11 @@ artifacts:
 
 include:
   - resources/*.yml
+
+variables:
+  schedule_pause_status:
+    description: Pause status of the job schedules (dev mode pauses them regardless).
+    default: PAUSED
 
 # Three targets in the one course workspace, each writing your schema in its own catalog
 # (project_config.yml). Each is deployed under the home folder of whoever deploys it: you from your
@@ -33,9 +39,13 @@ targets:
     workspace:
       host: https://dbc-88df4c2c-4033.cloud.databricks.com
       root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.target}/${bundle.name}
+    variables:
+      schedule_pause_status: PAUSED
 
   # Production: deployed after acceptance, once you approve it.
   prd:
     workspace:
       host: https://dbc-88df4c2c-4033.cloud.databricks.com
       root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.target}/${bundle.name}
+    variables:
+      schedule_pause_status: UNPAUSED

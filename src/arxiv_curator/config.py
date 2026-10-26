@@ -1,4 +1,4 @@
-"""Configuration management for Arxiv Curator. Test"""
+"""Configuration management for Arxiv Curator."""
 
 import os
 from pathlib import Path

@@ -18,6 +18,7 @@ class ProjectConfig(BaseModel):
     experiment_path: str = Field(..., description="MLflow experiment path for this environment")
     warehouse_id: str = Field(..., description="Warehouse ID")
     genie_space_id: str | None = Field(None, description="Genie space ID for MCP integration")
+    lakebase_instance: str | None = Field(None, description="Lakebase Autoscaling project ID")
     system_prompt: str = Field(
         default="You are a helpful AI assistant that helps users find and understand research papers.",
         description="System prompt for the agent",

@@ -10,7 +10,7 @@ dev:
   embedding_endpoint: course_ops.gateway.embed
   warehouse_id: 1c906a09ff40c838
   experiment_path: /Shared/arxiv-curator-course
-  lakebase_instance: lb-llmops-dev
+  lakebase_instance: lb-llmops-willis-nana
 
 # Acceptance/Staging environment
 acc:

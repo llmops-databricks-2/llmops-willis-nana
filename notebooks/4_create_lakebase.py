@@ -69,13 +69,13 @@ except NotFound:
     synced = w.postgres.create_synced_table(
         synced_table=SyncedTable(
             spec=SyncedTableSyncedTableSpec(
-                source_table_full_name=SOURCE_TABLE,
-                primary_key_columns=[primary_key],
+                source_table_full_name='llmops_dev.willis_nana.call_chunks',
+                primary_key_columns=['chunk_id'],
                 scheduling_policy=SyncedTableSyncedTableSpecSyncedTableSchedulingPolicy.TRIGGERED,
-                branch=BRANCH,
-                postgres_database=POSTGRES_DATABASE,
+                branch='projects/lb-llmops-willis-nana/branches/production',
+                postgres_database='lb-llmops-willis-nana',
                 create_database_objects_if_missing=True,
-            )
+            ) 
         ),
         synced_table_id=SYNCED_TABLE,
     ).wait()

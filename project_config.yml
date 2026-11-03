@@ -1,5 +1,7 @@
 # Project configuration for the LLMOps course, filled in for you at onboarding.
 # Resources are provisioned at onboarding except the volume, which you create during the course.
+# embedding_endpoint is the serving endpoint for ai_query, AI Search and DatabricksServingEndpoint;
+# embedding_service is the AI Gateway model service for the OpenAI client (README.md).
 
 # Your usage policy: set it on every serverless job, endpoint and app you create.
 usage_policy_id: "72aa520c-cf9e-3c97-93dd-3a3a98a4c579"
@@ -13,9 +15,10 @@ dev:
   schema: "willis_nana"
   volume: "arxiv_files"
   llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "course_ops.gateway.embed"
-  warehouse_id: "1c906a09ff40c838"
-  experiment_path: "/llmops/willis_nana-dev"
+  embedding_endpoint: "databricks-gte-large-en"
+  embedding_service: "course_ops.gateway.embed"
+  warehouse_id: "44a6c6c521b537c2"
+  experiment_path: "/llmops/willis-nana-dev"
   # Your provisioned Lakebase project.
   lakebase_instance: "lb-llmops-willis-nana"
 
@@ -25,9 +28,10 @@ acc:
   schema: "willis_nana"
   volume: "arxiv_files"
   llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "course_ops.gateway.embed"
-  warehouse_id: "1c906a09ff40c838"
-  experiment_path: "/llmops/willis_nana-acc"
+  embedding_endpoint: "databricks-gte-large-en"
+  embedding_service: "course_ops.gateway.embed"
+  warehouse_id: "44a6c6c521b537c2"
+  experiment_path: "/llmops/willis-nana-acc"
   # Your provisioned Lakebase project for this environment.
   lakebase_instance: "lb-llmops-willis-nana"
 
@@ -37,8 +41,9 @@ prd:
   schema: "willis_nana"
   volume: "arxiv_files"
   llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "course_ops.gateway.embed"
-  warehouse_id: "1c906a09ff40c838"
-  experiment_path: "/llmops/willis_nana-prd"
+  embedding_endpoint: "databricks-gte-large-en"
+  embedding_service: "course_ops.gateway.embed"
+  warehouse_id: "44a6c6c521b537c2"
+  experiment_path: "/llmops/willis-nana-prd"
   # Your provisioned Lakebase project for this environment.
   lakebase_instance: "lb-llmops-willis-nana"

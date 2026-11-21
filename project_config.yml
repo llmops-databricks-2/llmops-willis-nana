@@ -10,7 +10,8 @@ dev:
   embedding_endpoint: course_ops.gateway.embed
   warehouse_id: 1c906a09ff40c838
   experiment_path: /Shared/arxiv-curator-course
-  lakebase_instance: lb-llmops-willis-nana
+  lakebase_project_id: lb-llmops-willis-nana
+  lakebase_database: lb-llmops-willis-nana
 
 # Acceptance/Staging environment
 acc:
@@ -21,7 +22,7 @@ acc:
   embedding_endpoint: course_ops.gateway.embed
   warehouse_id: fed166457cfccb89
   experiment_path: /Shared/arxiv-curator-course
-  lakebase_instance: lb-llmops-acc
+  lakebase_project_id: lb-llmops-acc
 
 # Production environment
 prd:
@@ -32,7 +33,7 @@ prd:
   embedding_endpoint: course_ops.gateway.embed
   warehouse_id: fed166457cfccb89
   experiment_path: /Shared/arxiv-curator-course
-  lakebase_instance: lb-llmops-prd
+  lakebase_project_id: lb-llmops-prd
 
 # Model configuration
 model_config:

@@ -1,5 +1,7 @@
-# Project Configuration for LLMOps Course
-usage_policy_id: "29a355d8-7fa4-3f65-b328-9f900842672e"
+# Project configuration for the LLMOps course, filled in for you at onboarding.
+# Resources are provisioned at onboarding except the volume, which you create during the course.
+# embedding_endpoint is the serving endpoint for ai_query, AI Search and DatabricksServingEndpoint;
+# embedding_service is the AI Gateway model service for the OpenAI client (README.md).
 
 # Development environment
 dev:

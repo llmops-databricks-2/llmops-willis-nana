@@ -76,7 +76,9 @@ class CallAgent:
         if answer is None:
             answer = "I could not finish within the step limit. Please narrow the question."
 
-        self.memory.save_messages(session_id, [{"role": "user", "content": question}, {"role": "assistant", "content": answer}])
+        self.memory.save_messages(
+            session_id, [{"role": "user", "content": question}, {"role": "assistant", "content": answer}]
+        )
         return answer
 
     @mlflow.trace(span_type="TOOL")

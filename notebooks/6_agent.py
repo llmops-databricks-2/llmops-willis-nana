@@ -6,6 +6,8 @@
 #   "/Workspace/Users/willis.nana@gmail.com/artifacts/arxiv_curator-0.0.2-py3-none-any.whl",
 # ]
 # ///
+"""Call agent: Genie (MCP) and transcript search tools, with conversation memory in Lakebase."""
+
 # MAGIC %md
 # MAGIC # 6. Call agent: tools and memory
 # MAGIC
@@ -31,13 +33,14 @@
 
 # COMMAND ----------
 
-dbutils.library.restartPython()
+dbutils.library.restartPython()  # noqa: F821 (injected by the notebook runtime, restarts before the imports below)
 
 # COMMAND ----------
 
 import uuid
 
 import mlflow
+import nest_asyncio
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.runtime import dbutils
 from loguru import logger
@@ -67,8 +70,6 @@ w = WorkspaceClient()
 # COMMAND ----------
 
 # DBTITLE 1,Load tools
-import nest_asyncio
-
 nest_asyncio.apply()  # MCP client uses asyncio.run(); the notebook already has a running event loop
 
 tools = [*genie_tools(w, cfg.genie_space_id), create_search_calls_tool(cfg, w)]

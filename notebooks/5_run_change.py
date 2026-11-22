@@ -60,8 +60,8 @@ with manager.connection() as conn:
         , title
         , authors
         , year
-        , count(*) 
-        FROM {manager.table_name} 
+        , count(*)
+        FROM {manager.table_name}
         GROUP BY 1, 2, 3, 4 ORDER BY 4, 1"""
     ).fetchall()
 display(pd.DataFrame(calls, columns=["call_id", "title", "speakers", "year", "num_chunks"]))

@@ -16,6 +16,7 @@ class ToolInfo(BaseModel):
         name: Tool name
         spec: JSON description of the tool (OpenAI chat-completions format)
         exec_fn: Function that implements the tool logic and returns text
+
     """
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -50,7 +51,9 @@ def create_mcp_tools(w: WorkspaceClient, url_list: list[str]) -> list[ToolInfo]:
                     "description": mcp_tool.description or f"Tool: {mcp_tool.name}",
                 },
             }
-            tools.append(ToolInfo(name=mcp_tool.name, spec=spec, exec_fn=create_managed_exec_fn(server_url, mcp_tool.name, w)))
+            tools.append(
+                ToolInfo(name=mcp_tool.name, spec=spec, exec_fn=create_managed_exec_fn(server_url, mcp_tool.name, w))
+            )
     return tools
 
 

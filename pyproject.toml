@@ -72,6 +72,10 @@ lint.ignore = [
     "C901", # too complex
 ]
 
+[tool.ruff.lint.per-file-ignores]
+# Databricks notebooks are cell based: imports follow earlier cells, and `# MAGIC` lines are cell magics, not dead code
+"notebooks/*" = ["E402", "ERA001"]
+
 [tool.ruff.format]
 indent-style = "space"
 docstring-code-format = true

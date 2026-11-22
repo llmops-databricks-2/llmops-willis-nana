@@ -15,7 +15,7 @@ A sales manager (here: the DataMentoring prospect calls) asks questions about re
 | 1 | Load the last 20 messages of the session from Lakebase (`agent_messages`) | code |
 | 2 | Call the LLM with system prompt + history + question + tool specs | code |
 | 3 | LLM answers, or requests tools: which tool, which arguments, when to stop | **model** |
-| 4 | Run each requested tool, feed results back; repeat 2-3, at most 5 steps | code (loop bound, error capture) |
+| 4 | Run each requested tool, feed results back; repeat 2-3, at most 8 steps | code (loop bound, error capture) |
 | 5 | Save the user question and final answer to Lakebase | code |
 
 ## Design choices

@@ -2,17 +2,23 @@
 
 from __future__ import annotations
 
+import json
+from typing import Any
+
+import psycopg
 from loguru import logger
+from psycopg_pool import ConnectionPool
 
 from arxiv_curator.config import ProjectConfig
 from arxiv_curator.vector_search import LakebasePgVectorManager
 
 
 class LakebaseMemory:
-    """One row per message, keyed by session: save each turn, reload the last N on the next one.
+    """Session messages in Lakebase: one row per message (JSONB), loaded again on the next turn.
 
-    Roles kept are user and assistant only: tool calls stay inside a turn, so the history
-    stays small and always valid for the chat API.
+    Credentials are short-lived, so the pool is rebuilt after a connection error.
+    Reads and writes degrade to a warning when the database is unreachable: the agent still answers,
+    just without memory.
     """
 
     def __init__(self, config: ProjectConfig, table: str = "agent_messages") -> None:
@@ -20,18 +26,28 @@ class LakebaseMemory:
         self.manager = LakebasePgVectorManager(config=config)
         self.schema = config.schema
         self.table = f'"{config.schema}"."{table}"'
+        self._pool: ConnectionPool | None = None
 
-    def ensure_table(self) -> None:
-        """Create the messages table if needed (idempotent)."""
-        with self.manager.connection() as conn:
+    def _get_pool(self) -> ConnectionPool:
+        if self._pool is None:
+            self._pool = ConnectionPool(conninfo=self.manager.connection_string(), min_size=1, max_size=5, open=True)
+        return self._pool
+
+    def _reset_pool(self) -> None:
+        if self._pool is not None:
+            self._pool.close()
+            self._pool = None
+
+    def ensure_schema(self) -> None:
+        """Create the messages table and its index if they do not exist."""
+        with self._get_pool().connection() as conn:
             conn.execute(f'CREATE SCHEMA IF NOT EXISTS "{self.schema}"')
             conn.execute(
                 f"""
                 CREATE TABLE IF NOT EXISTS {self.table} (
                     id BIGSERIAL PRIMARY KEY,
                     session_id TEXT NOT NULL,
-                    role TEXT NOT NULL,
-                    content TEXT NOT NULL,
+                    message_data JSONB NOT NULL,
                     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
                 )
                 """
@@ -39,24 +55,38 @@ class LakebaseMemory:
             conn.execute(f"CREATE INDEX IF NOT EXISTS agent_messages_session_idx ON {self.table} (session_id, id)")
         logger.info(f"Memory table {self.table} ready")
 
-    def save(self, session_id: str, messages: list[dict[str, str]]) -> None:
-        """Append messages (role, content) to the session."""
-        with self.manager.connection() as conn, conn.cursor() as cur:
-            cur.executemany(
-                f"INSERT INTO {self.table} (session_id, role, content) VALUES (%s, %s, %s)",
-                [(session_id, m["role"], m["content"]) for m in messages],
-            )
+    def save_messages(self, session_id: str, messages: list[dict[str, Any]]) -> None:
+        """Append messages ({role, content}) to the session."""
+        try:
+            with self._get_pool().connection() as conn:
+                for message in messages:
+                    conn.execute(
+                        f"INSERT INTO {self.table} (session_id, message_data) VALUES (%s, %s)",
+                        (session_id, json.dumps(message)),
+                    )
+        except psycopg.OperationalError:
+            self._reset_pool()
+            raise
+        except Exception as e:
+            logger.warning(f"Failed to save session messages: {e}")
 
-    def load(self, session_id: str, limit: int = 20) -> list[dict[str, str]]:
+    def load_messages(self, session_id: str, limit: int = 20) -> list[dict[str, Any]]:
         """Return the last `limit` messages of the session, oldest first."""
-        with self.manager.connection() as conn:
-            rows = conn.execute(
-                f"SELECT role, content FROM {self.table} WHERE session_id = %s ORDER BY id DESC LIMIT %s",
-                (session_id, limit),
-            ).fetchall()
-        return [{"role": role, "content": content} for role, content in reversed(rows)]
+        try:
+            with self._get_pool().connection() as conn:
+                rows = conn.execute(
+                    f"SELECT message_data FROM {self.table} WHERE session_id = %s ORDER BY id DESC LIMIT %s",
+                    (session_id, limit),
+                ).fetchall()
+            return [row[0] for row in reversed(rows)]
+        except psycopg.OperationalError:
+            self._reset_pool()
+            raise
+        except Exception as e:
+            logger.warning(f"Failed to load session messages: {e}")
+            return []
 
     def clear(self, session_id: str) -> None:
         """Delete the history of a session."""
-        with self.manager.connection() as conn:
+        with self._get_pool().connection() as conn:
             conn.execute(f"DELETE FROM {self.table} WHERE session_id = %s", (session_id,))

@@ -78,6 +78,11 @@ class LakebasePgVectorManager:
         self._connection_string = f"postgresql://{username}:{credential.token}@{host}:5432/{database}?sslmode=require"
         return self._connection_string
 
+    def connection_string(self) -> str:
+        """Fresh connection string (the token is short-lived)."""
+        self._connection_string = None
+        return self._get_connection_string()
+
     def connection(self) -> psycopg.Connection:
         """Open a Lakebase connection using a fresh workspace credential."""
         self._connection_string = None

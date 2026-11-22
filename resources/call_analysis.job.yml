@@ -1,0 +1,37 @@
+# The call analysis job: ingests the call transcript PDFs of the target's volume into the
+# call_analysis table, then sends a transcript to the course's chat model through the AI Gateway.
+# Both tasks run on serverless with the arxiv_curator wheel installed, and read their catalog,
+# schema and model from project_config.yml for the target passed as the env parameter.
+resources:
+  jobs:
+    call_analysis:
+      name: job-call-analysis-willis-nana-${bundle.target}
+      budget_policy_id: "72aa520c-cf9e-3c97-93dd-3a3a98a4c579"
+      schedule:
+        quartz_cron_expression: "0 0 6 * * ?"
+        timezone_id: Europe/Paris
+        pause_status: ${var.schedule_pause_status}
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "5"
+            dependencies:
+              - ../dist/*.whl
+              - pypdf==5.4.0
+
+      tasks:
+        - task_key: sales_data_ingestion
+          environment_key: default
+          notebook_task:
+            notebook_path: ../notebooks/1_sales_data_ingestion.py
+            base_parameters:
+              env: ${bundle.target}
+
+        - task_key: call_model_prompts
+          depends_on:
+            - task_key: sales_data_ingestion
+          environment_key: default
+          notebook_task:
+            notebook_path: ../notebooks/2_call_model_prompts.py
+            base_parameters:
+              env: ${bundle.target}

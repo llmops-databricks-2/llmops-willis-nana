@@ -3,47 +3,55 @@
 # embedding_endpoint is the serving endpoint for ai_query, AI Search and DatabricksServingEndpoint;
 # embedding_service is the AI Gateway model service for the OpenAI client (README.md).
 
-# Your usage policy: set it on every serverless job, endpoint and app you create.
-usage_policy_id: "72aa520c-cf9e-3c97-93dd-3a3a98a4c579"
-
-# Lakebase projects may be shared across environments; Unity Catalog
-# schemas remain separate. Your cohort provisions the Lakebase values below.
-
-# Development: your own schema in the dev catalog, which you manage and work in.
+# Development environment
 dev:
-  catalog: "llmops_dev"
-  schema: "willis_nana"
-  volume: "arxiv_files"
-  llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "databricks-gte-large-en"
-  embedding_service: "course_ops.gateway.embed"
-  warehouse_id: "44a6c6c521b537c2"
-  experiment_path: "/llmops/willis-nana-dev"
-  # Your provisioned Lakebase project.
-  lakebase_instance: "lb-llmops-willis-nana"
+  catalog: llmops_dev
+  schema: willis_nana
+  volume: sales_calls # should be tested
+  llm_endpoint: course_ops.gateway.chat
+  embedding_endpoint: course_ops.gateway.embed
+  warehouse_id: af659090ca671c00
+  experiment_path: /Shared/arxiv-curator-course
+  lakebase_project_id: lb-llmops-willis-nana
+  lakebase_database: lb-llmops-willis-nana
+  genie_space_id: "01f1e608dce2166c9ecad01530fcf893" # Sales Calls Analytics
 
-# Acceptance: your schema in the acceptance catalog, written by your deploys; you read it.
+# Acceptance/Staging environment
 acc:
-  catalog: "llmops_acc"
-  schema: "willis_nana"
-  volume: "arxiv_files"
-  llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "databricks-gte-large-en"
-  embedding_service: "course_ops.gateway.embed"
-  warehouse_id: "44a6c6c521b537c2"
-  experiment_path: "/llmops/willis-nana-acc"
-  # Your provisioned Lakebase project for this environment.
-  lakebase_instance: "lb-llmops-willis-nana"
+  catalog: llmops_acc
+  schema: willis_nana
+  volume: sales_calls # to be tested
+  llm_endpoint: course_ops.gateway.chat
+  embedding_endpoint: course_ops.gateway.embed
+  warehouse_id: fed166457cfccb89
+  experiment_path: /Shared/arxiv-curator-course
+  lakebase_project_id: lb-llmops-acc
 
-# Production: your schema in the production catalog, written by your deploys; you read it.
+# Production environment
 prd:
-  catalog: "llmops_prd"
-  schema: "willis_nana"
-  volume: "arxiv_files"
-  llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "databricks-gte-large-en"
-  embedding_service: "course_ops.gateway.embed"
-  warehouse_id: "44a6c6c521b537c2"
-  experiment_path: "/llmops/willis-nana-prd"
-  # Your provisioned Lakebase project for this environment.
-  lakebase_instance: "lb-llmops-willis-nana"
+  catalog: llmops_prd
+  schema: willis_nana
+  volume: sales_calls # to be tested
+  llm_endpoint: course_ops.gateway.chat
+  embedding_endpoint: course_ops.gateway.embed
+  warehouse_id: fed166457cfccb89
+  experiment_path: /Shared/arxiv-curator-course
+  lakebase_project_id: lb-llmops-prd
+
+# Model configuration
+model_config:
+  temperature: 0.7
+  max_tokens: 2000
+  top_p: 0.95
+
+# Vector search configuration
+vector_search:
+  embedding_dimension: 1024
+  similarity_metric: cosine
+  num_results: 5
+
+# Chunking configuration
+chunking:
+  chunk_size: 512
+  chunk_overlap: 50
+  separator: "\n\n"

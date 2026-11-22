@@ -8,10 +8,11 @@ dev:
   volume: sales_calls # should be tested
   llm_endpoint: course_ops.gateway.chat
   embedding_endpoint: course_ops.gateway.embed
-  warehouse_id: 1c906a09ff40c838
+  warehouse_id: af659090ca671c00
   experiment_path: /Shared/arxiv-curator-course
   lakebase_project_id: lb-llmops-willis-nana
   lakebase_database: lb-llmops-willis-nana
+  genie_space_id: "01f1e608dce2166c9ecad01530fcf893" # Sales Calls Analytics
 
 # Acceptance/Staging environment
 acc:

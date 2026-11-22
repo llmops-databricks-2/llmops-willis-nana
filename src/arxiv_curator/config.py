@@ -25,6 +25,7 @@ class ProjectConfig(BaseModel):
     experiment_path: str = Field(..., description="MLflow experiment path")
     lakebase_project_id: str = Field(..., description="Lakebase project ID")
     lakebase_database: str = Field("databricks_postgres", description="Postgres database of the Lakebase project")
+    genie_space_id: str | None = Field(None, description="Genie space id used by the agent through MCP")
 
     model_config = {"populate_by_name": True}
 

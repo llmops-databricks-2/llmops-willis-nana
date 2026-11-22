@@ -20,6 +20,21 @@
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC ## 0. Install the current package
+# MAGIC The bundle deploy is blocked (jobs owned by someone else), so install the wheel built from `src/`
+# MAGIC (`uv build`, uploaded to the workspace). Rebuild and re-upload it after each code change, with a new version.
+
+# COMMAND ----------
+
+# MAGIC %pip install --force-reinstall --no-deps /Workspace/Users/willis.nana@gmail.com/artifacts/arxiv_curator-0.0.2-py3-none-any.whl
+
+# COMMAND ----------
+
+dbutils.library.restartPython()
+
+# COMMAND ----------
+
 import uuid
 
 import mlflow

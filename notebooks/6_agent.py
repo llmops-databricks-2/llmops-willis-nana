@@ -3,7 +3,7 @@
 # [tool.databricks.environment]
 # environment_version = "5"
 # dependencies = [
-#   "..",
+#   "/Workspace/Users/willis.nana@gmail.com/artifacts/arxiv_curator-0.0.2-py3-none-any.whl",
 # ]
 # ///
 # MAGIC %md
@@ -65,6 +65,11 @@ w = WorkspaceClient()
 # MAGIC ## 1. Tools: Genie (MCP) and a custom function
 
 # COMMAND ----------
+
+# DBTITLE 1,Load tools
+import nest_asyncio
+
+nest_asyncio.apply()  # MCP client uses asyncio.run(); the notebook already has a running event loop
 
 tools = [*genie_tools(w, cfg.genie_space_id), create_search_calls_tool(cfg, w)]
 logger.info(f"Loaded {len(tools)} tools: {[tool.name for tool in tools]}")

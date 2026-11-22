@@ -86,24 +86,30 @@ agent = CallAgent(cfg, tools, memory, workspace=w)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 3. Two turns in one session
-# MAGIC The follow-up ("it", "he") only makes sense if the first turn was loaded from Lakebase.
+# MAGIC ## 3. Quatre questions en français
+# MAGIC Questions 1 à 3 : une même session (Genie, recherche dans les transcripts, puis une relance qui n'a de sens
+# MAGIC que grâce à la mémoire). Question 4 : un nouvel agent, sans état local, relit la session depuis Lakebase.
 
 # COMMAND ----------
 
 session_id = f"demo-{uuid.uuid4().hex[:8]}"
-print(agent.chat(session_id, "How many calls do we have, and what was the main problem of the prospect in them?"))
-print("-" * 60)
-print(agent.chat(session_id, "Quote what he said about it."))
+
+# 1. Genie (MCP): chiffres et métadonnées
+print(agent.chat(session_id, "Combien d'appels avons-nous, quelle est leur durée moyenne et qui y a participé ?"))
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC ## 4. Persistence proof
-# MAGIC A brand-new agent and memory object (no process state) read the same session from Lakebase.
+# 2. search_calls (fonction personnalisée): contenu des échanges
+print(agent.chat(session_id, "Quel est le principal problème du prospect dans cet appel ?"))
 
 # COMMAND ----------
 
+# 3. Relance: « ses » et « à ce sujet » dépendent de la question précédente, chargée depuis Lakebase
+print(agent.chat(session_id, "Cite ses propres mots à ce sujet."))
+
+# COMMAND ----------
+
+# 4. Persistance: nouvel agent et nouvelle mémoire, même session
 fresh_agent = CallAgent(cfg, tools, LakebaseMemory(cfg), workspace=w)
-print(fresh_agent.chat(session_id, "Remind me what my first question was."))
+print(fresh_agent.chat(session_id, "Rappelle-moi quelle était ma toute première question."))
 print(memory.load_messages(session_id))
